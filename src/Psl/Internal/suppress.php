@@ -9,11 +9,9 @@ use function error_reporting;
 /**
  * @psalm-template T
  *
- * @psalm-param (pure-callable(): T) $fun
+ * @psalm-param (callable(): T) $fun
  *
  * @psalm-return T
- *
- * @psalm-pure
  *
  * @internal
  */
