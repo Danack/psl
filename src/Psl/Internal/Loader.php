@@ -456,6 +456,11 @@ final class Loader
         'Psl\Encoding\Base64\decode',
         'Psl\Encoding\Hex\encode',
         'Psl\Encoding\Hex\decode',
+        'Psl\ObjectOriented\class_alias',
+        'Psl\ObjectOriented\class_exists',
+        'Psl\ObjectOriented\interface_exists',
+        'Psl\ObjectOriented\trait_exists',
+        'Psl\ObjectOriented\get_class',
     ];
 
     public const INTERFACES = [
