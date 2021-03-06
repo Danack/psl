@@ -1,0 +1,41 @@
+name: "static analysis"
+
+on: ["pull_request", "push"]
+
+jobs:
+  static-analysis:
+    name: "static analysis"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "installing PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
+          ini-values: memory_limit=-1
+          tools: composer:v2, cs2pr
+          extensions: bcmath, mbstring, intl, sodium, json
+
+      #- name: "installing dependencies"
+      #  run: "composer update --no-interaction --no-progress"
+
+      - name: "Generating docs"
+        run: "php doc_gen.php"
+
+      - name: "committing built doc"
+      - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+        with:
+          # The arguments for the `git add` command (see the paragraph below for more info)
+          # Default: '.'
+          add: 'docs/index.md'
+
+          # The message for the commit
+          # Default: 'Commit from GitHub Actions (name of the workflow)'
+          # message: 'Your commit message'
+
+          # The flag used on the pull strategy. Use NO-PULL to avoid the action pulling at all.
+          # Default: '--no-rebase'
+          # pull_strategy: 'NO-PULL or --no-rebase or --no-ff or --rebase'
+
