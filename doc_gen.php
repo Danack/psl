@@ -117,7 +117,6 @@ function generateDocList(): string
 
     $contents[] = '---';
     $contents[] = 'This markdown file was generated from doc_gen.php. Any edits to it will likely be lost.';
-    $contents[] = '';
 
     return implode("\n", $contents);
 }
@@ -134,23 +133,33 @@ MD;
 
 $contents .= generateDocList();
 
+function checkDocsUpToDate($docFilename, $contents)
+{
+    $newLines = explode("\n", $contents);
+    $existingLines = file($docFilename);
+
+    if (count($newLines) !== count($existingLines)) {
+        echo "Docs are out of date, please regenerate by running 'php doc_gen.php'. Number of lines doesn't match.\n";
+        exit(-1);
+    }
+
+    for ($i = 0; $i < count($newLines); $i += 1) {
+        if (trim($newLines[$i]) !== trim($existingLines[$i])) {
+            echo "Docs are out of date, please regenerate by running 'php doc_gen.php'. Difference on line $i.\n";
+            exit(-1);
+        }
+    }
+
+    echo "docs are  up to date.\n";
+    exit(0);
+}
+
 $docFilename = __DIR__ . "/docs/index.md";
 
 if ($argc >= 2) {
     $firstArg = $argv[1];
     if (strcasecmp($firstArg, 'check') === 0) {
-        $existingContents = file_get_contents($docFilename);
-        // https://stackoverflow.com/questions/7475437/find-first-character-that-is-different-between-two-strings
-        $position = strspn($contents ^ $existingContents, "\0");
-
-        if (strlen($contents) !== strlen($existingContents)||
-            ($position !== false && $position < strlen($contents))) {
-            echo "Docs are out of date, please regenerate by running 'php doc_gen.php'.\n";
-            exit(-1);
-        }
-
-        echo "docs are  up to date.\n";
-        exit(0);
+        checkDocsUpToDate($docFilename, $contents);
     }
     echo "Unknown arg '$firstArg'.\n";
     exit(-1);
