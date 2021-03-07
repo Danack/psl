@@ -2,18 +2,6 @@
 
 declare(strict_types = 1);
 
-function glob_recursive($pattern, $flags = 0) {
-
-    $files = glob($pattern, $flags);
-
-    foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
-        $files = array_merge($files, glob_recursive
-        ($dir . '/' . basename($pattern), $flags));
-    }
-
-    return $files;
-}
-
 function generateNamespaceLine($namespace)
 {
     static $last_namespace = null;
@@ -146,5 +134,26 @@ MD;
 
 $contents .= generateDocList();
 
+$docFilename = __DIR__ . "/docs/index.md";
 
-file_put_contents(__DIR__ . "/docs/index.md", $contents);
+if ($argc >= 2) {
+    $firstArg = $argv[1];
+    if (strcasecmp($firstArg, 'check') === 0) {
+        $existingContents = file_get_contents($docFilename);
+        // https://stackoverflow.com/questions/7475437/find-first-character-that-is-different-between-two-strings
+        $position = strspn($contents ^ $existingContents, "\0");
+
+        if (strlen($contents) !== strlen($existingContents)||
+            ($position !== false && $position < strlen($contents))) {
+            echo "Docs are out of date, please regenerate by running 'php doc_gen.php'.\n";
+            exit(-1);
+        }
+
+        echo "docs are  up to date.\n";
+        exit(0);
+    }
+    echo "Unknown arg '$firstArg'.\n";
+    exit(-1);
+}
+
+file_put_contents($docFilename, $contents);

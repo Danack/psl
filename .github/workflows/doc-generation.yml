@@ -4,7 +4,7 @@ on: ["pull_request", "push"]
 
 jobs:
   static-analysis:
-    name: "static analysis"
+    name: "doc generation"
     runs-on: "ubuntu-latest"
     steps:
       - name: "checkout"
@@ -22,20 +22,13 @@ jobs:
       #  run: "composer update --no-interaction --no-progress"
 
       - name: "Generating docs"
-        run: "php doc_gen.php"
+        run: "php doc_gen.php check"
 
-      - name: "committing built doc"
-        uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
-        with:
+    #  - name: "committing built doc"
+    #    uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
+    #    with:
           # The arguments for the `git add` command (see the paragraph below for more info)
-          # Default: '.'
-          add: 'docs/index.md'
+    #      # Default: '.'
+    #      add: 'docs/index.md'
 
-          # The message for the commit
-          # Default: 'Commit from GitHub Actions (name of the workflow)'
-          # message: 'Your commit message'
-
-          # The flag used on the pull strategy. Use NO-PULL to avoid the action pulling at all.
-          # Default: '--no-rebase'
-          # pull_strategy: 'NO-PULL or --no-rebase or --no-ff or --rebase'
 
