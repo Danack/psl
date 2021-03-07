@@ -146,6 +146,8 @@ function checkDocsUpToDate($docFilename, $contents)
     for ($i = 0; $i < count($newLines); $i += 1) {
         if (trim($newLines[$i]) !== trim($existingLines[$i])) {
             echo "Docs are out of date, please regenerate by running 'php doc_gen.php'. Difference on line $i.\n";
+            echo "generated: [" . $newLines[$i] . "]\n";
+            echo "checkedin: [" . $existingLines[$i] . "]\n";
             exit(-1);
         }
     }
