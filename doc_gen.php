@@ -14,13 +14,13 @@ function generateNamespaceLine($namespace)
     return '';
 }
 
-function generateLink($sha, $filename, $startLine): string
+function generateLink($version, $filename, $startLine): string
 {
     $string = "https://github.com/azjezz/psl/blob/%s/src/%s#L%d";
 
     return  sprintf(
         $string,
-        $sha,
+        $version,
         $filename,
         $startLine
     );
@@ -84,13 +84,7 @@ function generateInterfaceLine($sha, $interface): string
 
 function generateDocList(): string
 {
-    $sha = `git rev-parse HEAD`;
-    if ($sha === null) {
-        echo "Failed to read sha from git. Is git installed in container?";
-        exit(-1);
-    }
-
-    $sha = trim($sha);
+    $version = '1.5.x';
 
     require_once __DIR__ . "/vendor/autoload.php";
 
@@ -98,21 +92,21 @@ function generateDocList(): string
     $contents[] = '## Functions';
     $contents[] = '';
     foreach (\Psl\Internal\Loader::FUNCTIONS as $function) {
-        $contents[] = generateFunctionLine($sha, $function);
+        $contents[] = generateFunctionLine($version, $function);
     }
 
     $contents[] = '';
     $contents[] = '## Interfaces';
     $contents[] = '';
     foreach (\Psl\Internal\Loader::INTERFACES as $interface) {
-        $contents[] = generateInterfaceLine($sha, $interface);
+        $contents[] = generateInterfaceLine($version, $interface);
     }
 
     $contents[] = '';
     $contents[] = '## Classes';
     $contents[] = '';
     foreach (\Psl\Internal\Loader::CLASSES as $interface) {
-        $contents[] = generateInterfaceLine($sha, $interface);
+        $contents[] = generateInterfaceLine($version, $interface);
     }
 
     $contents[] = '---';
