@@ -1,9 +1,9 @@
-name: "static analysis"
+name: "doc check"
 
 on: ["pull_request", "push"]
 
 jobs:
-  static-analysis:
+  doc-check:
     name: "doc check"
     runs-on: "ubuntu-latest"
     steps:
